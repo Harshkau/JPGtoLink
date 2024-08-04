@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4906/4906292.png">
+    <title>JPGtoLink</title>
+    <style>
+        :root {
+            --background-color: #f0f0f0;
+            --text-color: #000;
+            --container-bg-color: #fff;
+            --container-text-color: #000;
+            --btn-bg-color: #007bff;
+            --btn-text-color: #fff;
+            --copy-btn-bg-color: #28a745;
+        }
+        
+        body.dark-mode {
+            --background-color: #333;
+            --text-color: #fff;
+            --container-bg-color: #444;
+            --container-text-color: #fff;
+            --btn-bg-color: #555;
+            --btn-text-color: #fff;
+            --copy-btn-bg-color: #006400;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            background-color: var(--container-bg-color);
+            color: var(--container-text-color);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .custom-file-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: var(--btn-bg-color);
+            color: var(--btn-text-color);
+            margin-bottom: 10px;
+        }
+        .output {
+            margin-top: 20px;
+        }
+        .output img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .output textarea {
+            width: 100%;
+            height: 60px;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+        }
+        .copy-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: var(--copy-btn-bg-color);
+            color: var(--btn-text-color);
+            margin-top: 10px;
+        }
+        .theme-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #888;
+            color: #fff;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button class="theme-btn" onclick="toggleTheme()">Toggle Theme</button>
+    <label for="file-upload" class="custom-file-upload">
+        Upload JPG Image
+    </label>
+    <input id="file-upload" type="file" accept="image/jpeg"/>
+    <div class="output">
+        <img id="output-image" src="" alt="Image will appear here" style="display: none;"/>
+        <textarea id="output-url" readonly placeholder="URL will appear here"></textarea>
+        <button class="copy-btn" onclick="copyToClipboard()">Copy URL</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById('file-upload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file && file.type === 'image/jpeg') {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const result = e.target.result;
+                document.getElementById('output-image').src = result;
+                document.getElementById('output-image').style.display = 'block';
+                document.getElementById('output-url').value = result.replace(/^data:image\/jpeg/, "data:image/jpeg");
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please upload a JPG image.');
+        }
+    });
+
+    function copyToClipboard() {
+        const urlField = document.getElementById('output-url');
+        urlField.select();
+        document.execCommand('copy');
+        alert('URL copied to clipboard');
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+    }
+</script>
+
+</body>
+</html>
